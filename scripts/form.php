@@ -45,24 +45,41 @@ include '../scripts/class_enchere.php';
 
                 // CREATION ET INSERTION DE LA NOUVELLE ENCHERE
                 $id=intval($_POST['id']);
-                if (sizeof($_POST['name'])<255){
-                    $name=strval($_POST["name"]);
-                }
+                $date_time= new DateTime($_POST['time']);
+
+                //VERIFICATION
+                $verify_input=0;
                 if ($_POST['price']>1){
                     $price=floatval($_POST["price"]);
                 }
+                else{
+                    $verify_input++;
+                }
                 //$_POST['time'];
-                if (sizeof($_POST['image']<255) && sizeof($_POST['desc'])<255){               
+                if (sizeof($_POST['image']) <255 
+                 && sizeof($_POST['desc'])  <255
+                 && sizeof($_POST['name'])  <255){               
                     $image=strval($_POST["image"]);
                     $desc=strval($_POST["desc"]);
+                }
+                else{
+                    $verify_input++;
                 }
                 if ($_POST['steptime']>0){
                     $steptime=intval($_POST["steptime"]);
                 }
+                else{
+                    $verify_input++;
+                }
                 if ($_POST['stepprice'] > 1){
                     $stepprice=intval($_POST["stepprice"]);
                 }
-                $date_time= new DateTime($_POST['time']);
+                else{
+                    $verify_input++;
+                }
+
+
+                if ($verify_input==0){
                 $carton[$i - $off] = new Enchere(
                                                 $id,
                                                 $name,
@@ -73,13 +90,11 @@ include '../scripts/class_enchere.php';
                                                 $steptime,
                                                 $stepprice
                 );
-
+                }
                 // ENREGISTREMENT DANS LE FICHIER JSON
                 save($carton, $file);
                 header('Location:../encheres/index.php');
-                
-            }
+                }
         
-
 
 ?>
